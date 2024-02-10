@@ -1,22 +1,5 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {
-  concat,
-  fromEvent,
-  interval,
-  noop,
-  observable,
-  Observable,
-  of,
-  timer,
-  merge,
-  Subject,
-  BehaviorSubject,
-  AsyncSubject,
-  ReplaySubject
-} from 'rxjs';
-import {delayWhen, filter, map, take, timeout} from 'rxjs/operators';
-import {createHttpObservable} from '../common/util';
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {Component, OnInit} from '@angular/core';
+import {noop, Observable} from 'rxjs';
 
 
 @Component({
@@ -28,20 +11,30 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
-    const interval$ = timer(3000,1000);
+    // create an  Observable - the definition of http stream
+    const http$ = Observable.create(observer => {
+      fetch('/api/courses')
+        .then(response => {
+          return response.json();
+        })
+        .then(jsonBody => {
+          observer.next(jsonBody);
 
-    const subscription = interval$.subscribe(val => console.log("stream 1 => " + val));
+          observer.complete(); // terminate http stream by this method
 
-    setTimeout(() => subscription.unsubscribe(), 5000);
+          // observer.next(); // this line would break the observable contract
+        })
+        .catch(error => {
+          observer.error(error); // we are respecting the observable contract: either we are completing or catching an error
+        });
+    });
 
-    const click$ = fromEvent(document, 'click');
-    click$.subscribe(
-
-      evt => console.log(evt),
-      err => console.log(err),
-      () => console.log("completed")
-
-      );
+    http$.subscribe(
+      courses => console.log(courses),
+      // () => {},
+      noop, // stands for no operation, equivalent to () => {},
+      ()  => console.log('completed')
+    );
   }
 
 
