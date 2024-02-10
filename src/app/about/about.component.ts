@@ -16,6 +16,7 @@ import {
 } from 'rxjs';
 import {delayWhen, filter, map, take, timeout} from 'rxjs/operators';
 import {createHttpObservable} from '../common/util';
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 
 
 @Component({
@@ -26,25 +27,10 @@ import {createHttpObservable} from '../common/util';
 export class AboutComponent implements OnInit {
 
   ngOnInit() {
-    document.addEventListener('click', event => {
-      console.log(event);
 
-      setTimeout(() => {
-        console.log("finished...");
+    const interval$ = interval(1000);
 
-        let counter = 0;
-        setInterval(()=>{
-          console.log(counter);
-          counter++;
-        }, 1000);
-
-      },3000);
-
-    });
-
-
-
-
+    interval$.subscribe(val => console.log("stream 1 " + val));
   }
 
 
