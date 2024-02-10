@@ -28,11 +28,10 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
-    const interval$ = interval(1000);
+    const interval$ = timer(3000,1000);
 
     interval$.subscribe(val => console.log("stream 1 => " + val));
 
-    interval$.subscribe(val => console.log("stream 2 => " + val));
   }
 
 
