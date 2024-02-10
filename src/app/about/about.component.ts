@@ -26,7 +26,9 @@ import {createHttpObservable} from '../common/util';
 export class AboutComponent implements OnInit {
 
     ngOnInit() {
-
+      document.addEventListener('click', event => {
+        console.log(event);
+      });
 
     }
 
