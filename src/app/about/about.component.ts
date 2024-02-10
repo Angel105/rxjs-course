@@ -12,7 +12,11 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
 
     // create an  Observable - the definition of http stream
+    // transform a Promise-based call (fetch) into an Observable; What's an advantage?
+    // The advantage is that we can use all RxJs operators to easily combine our http-stream with other
+    // streams such as click-handlers, time-out, other http requests, ...
     const http$ = Observable.create(observer => {
+
       fetch('/api/courses')
         .then(response => {
           return response.json();
