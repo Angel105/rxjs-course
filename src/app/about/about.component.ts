@@ -35,6 +35,10 @@ export class AboutComponent implements OnInit {
       counter++;
     }, 1000);
 
+    setTimeout(() => {
+      console.log("finished...");
+    },3000);
+
   }
 
 
