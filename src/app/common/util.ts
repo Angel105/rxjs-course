@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 
 
-export function createHttpObservable(url:string) {
+/*export function createHttpObservable(url:string) {
     return Observable.create(observer => {
 
         const controller = new AbortController();
@@ -34,5 +34,28 @@ export function createHttpObservable(url:string) {
 
 
     });
+}*/
+
+
+export function createHttpObservable(url: string) {
+  return Observable.create(observer => {
+
+    fetch(url)
+      .then(response => {
+        return response.json();
+      })
+      .then(jsonBody => {
+        observer.next(jsonBody);
+
+        observer.complete(); // terminate http stream by this method
+
+        // observer.next(); // this line would break the observable contract
+      })
+      .catch(error => {
+        observer.error(error); // we are respecting the observable contract: either we are completing or catching an error
+      });
+  });
 }
+
+
 

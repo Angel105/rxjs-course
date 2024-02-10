@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {noop, Observable} from 'rxjs';
+import {noop} from 'rxjs';
+import {createHttpObservable} from "../common/util";
+import {map} from "rxjs/operators";
 
 
 @Component({
@@ -15,25 +17,18 @@ export class AboutComponent implements OnInit {
     // transform a Promise-based call (fetch) into an Observable; What's an advantage?
     // The advantage is that we can use all RxJs operators to easily combine our http-stream with other
     // streams such as click-handlers, time-out, other http requests, ...
-    const http$ = Observable.create(observer => {
+    const http$ = createHttpObservable('/api/courses');
 
-      fetch('/api/courses')
-        .then(response => {
-          return response.json();
-        })
-        .then(jsonBody => {
-          observer.next(jsonBody);
+    // map http$
+    // pipe operator allows to chain observables
+    // create a new observable courses$ that is the result of taking values of initial observable http$ and passing them
+    // through a function inside map (.), namely httpResponse => Object.values(httpResponse["payload"])
+    const courses$ = http$
+      .pipe(
+        map(httpResponse => Object.values(httpResponse["payload"]) )
+      );
 
-          observer.complete(); // terminate http stream by this method
-
-          // observer.next(); // this line would break the observable contract
-        })
-        .catch(error => {
-          observer.error(error); // we are respecting the observable contract: either we are completing or catching an error
-        });
-    });
-
-    http$.subscribe(
+    courses$.subscribe(
       courses => console.log(courses),
       // () => {},
       noop, // stands for no operation, equivalent to () => {},
@@ -41,9 +36,7 @@ export class AboutComponent implements OnInit {
     );
   }
 
-
 }
-
 
 
 
