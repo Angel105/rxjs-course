@@ -32,6 +32,8 @@ export class AboutComponent implements OnInit {
 
     interval$.subscribe(val => console.log("stream 1 => " + val));
 
+    const click$ = fromEvent(document, 'click');
+    click$.subscribe(evt => console.log(evt));
   }
 
 
