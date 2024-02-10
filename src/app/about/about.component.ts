@@ -30,10 +30,18 @@ export class AboutComponent implements OnInit {
 
     const interval$ = timer(3000,1000);
 
-    interval$.subscribe(val => console.log("stream 1 => " + val));
+    const subscription = interval$.subscribe(val => console.log("stream 1 => " + val));
+
+    setTimeout(() => subscription.unsubscribe(), 5000);
 
     const click$ = fromEvent(document, 'click');
-    click$.subscribe(evt => console.log(evt));
+    click$.subscribe(
+
+      evt => console.log(evt),
+      err => console.log(err),
+      () => console.log("completed")
+
+      );
   }
 
 
