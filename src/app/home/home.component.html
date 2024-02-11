@@ -12,7 +12,7 @@
 
             </courses-card-list>-->
             <courses-card-list
-                    [courses]="beginnerCourses">
+                    [courses]="beginnerCourses$ | async">
 
             </courses-card-list>
 
@@ -25,7 +25,7 @@
 
             ></courses-card-list>-->
             <courses-card-list
-                    [courses]="advancedCourses"
+                    [courses]="advancedCourses$ | async"
 
             ></courses-card-list>
 

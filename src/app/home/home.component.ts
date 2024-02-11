@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {createHttpObservable} from "../common/util";
 import {map} from "rxjs/operators";
-import {noop} from "rxjs";
+import {noop, Observable} from "rxjs";
 import {Course} from "../model/course";
 
 
@@ -12,11 +12,8 @@ import {Course} from "../model/course";
 })
 export class HomeComponent implements OnInit {
 
-  /*beginnerCourses$: Observable<Course[]>;
-  advancedCourses$: Observable<Course[]>;*/
-
-  beginnerCourses: Course[];
-  advancedCourses: Course[];
+  beginnerCourses$: Observable<Course[]>;
+  advancedCourses$: Observable<Course[]>;
 
   constructor(/*private store:Store*/) {
 
@@ -30,20 +27,19 @@ export class HomeComponent implements OnInit {
 
     const http$ = createHttpObservable('/api/courses');
 
-    const courses$ = http$
+    const courses$: Observable<Course[]> = http$ // first mapping operation
       .pipe(
         map(httpResponse => Object.values(httpResponse["payload"]))
       );
 
-    courses$.subscribe(
-      courses => {
-        console.log(courses);
-        this.beginnerCourses = courses.filter(course => course.category === 'BEGINNER');
-        this.advancedCourses = courses.filter(course => course.category === 'ADVANCED');
-      },
-      noop,
-      () => console.log('completed')
-    );
+    this.beginnerCourses$ = courses$ // second mapping operation
+      .pipe(
+        map(courses => courses.filter(course => course.category === 'BEGINNER'))
+      );
+    this.advancedCourses$ = courses$ // second mapping operation
+      .pipe(
+        map(courses => courses.filter(course => course.category === 'ADVANCED'))
+      );
 
   }
 
