@@ -19,9 +19,9 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     course:Course;
 
-    @ViewChild('saveButton', { static: true }) saveButton: ElementRef;
+    @ViewChild('saveButton', { static: true, read: ElementRef }) saveButton: ElementRef;
 
-    @ViewChild('searchInput', { static: true }) searchInput : ElementRef;
+    @ViewChild('searchInput', { static: true, read: ElementRef }) searchInput : ElementRef;
 
     constructor(
         private fb: FormBuilder,
@@ -44,7 +44,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
       this.form.valueChanges
         .pipe(
           filter(() => this.form.valid),
-          mergeMap( changes => this.saveCourse(changes))
+          concatMap( changes => this.saveCourse(changes))
         )
         .subscribe();
     }
@@ -66,16 +66,6 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
         )
         .subscribe();
     }
-
-    save() {
-        this.store.saveCourse(this.course.id, this.form.value)
-            .subscribe(
-                () => this.close(),
-                err => console.log("Error saving course", err)
-            );
-    }
-
-
 
 
     close() {
