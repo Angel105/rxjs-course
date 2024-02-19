@@ -18,7 +18,7 @@ export class AboutComponent implements OnInit {
 
     const result$ = concat(source1$, source2$, source3$);
 
-    result$.subscribe(val => console.log(val));
+    // result$.subscribe(val => console.log(val));
 
 
   }

@@ -13,7 +13,7 @@ import {Store} from '../common/store.service';
     templateUrl: './course-dialog.component.html',
     styleUrls: ['./course-dialog.component.css']
 })
-export class CourseDialogComponent implements AfterViewInit {
+export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     form: FormGroup;
 
@@ -38,6 +38,24 @@ export class CourseDialogComponent implements AfterViewInit {
             longDescription: [course.longDescription,Validators.required]
         });
 
+    }
+
+    ngOnInit(): void {
+      this.form.valueChanges
+        .pipe(
+          filter(() => this.form.valid)
+        )
+        .subscribe(changes => {
+          const saveCourse$ = fromPromise(fetch(`/api/courses/${this.course.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(changes),
+            headers: {
+              'content-type': 'application/json'
+            }
+          }));
+
+          saveCourse$.subscribe();
+        });
     }
 
     ngAfterViewInit() {
