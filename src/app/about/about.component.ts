@@ -1,3 +1,4 @@
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 import {Component, OnInit} from '@angular/core';
 import {interval, merge} from 'rxjs';
 import {map} from "rxjs/operators";
@@ -13,11 +14,16 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
 
     const interval1$ = interval(1000);
-    const interval2$ = interval1$.pipe(map(val => 10 * val));
+    const subscription  = interval1$.subscribe(console.log);
 
-    const result$ = merge(interval1$, interval2$);
+    setTimeout(() => subscription.unsubscribe(), 5000);
+    // const interval2$ = interval1$.pipe(map(val => 10 * val));
+
+    // const result$ = merge(interval1$, interval2$);
 
     // result$.subscribe(console.log);
+
+
   }
 
 }

@@ -38,9 +38,13 @@ import {Observable} from 'rxjs';
 
 
 export function createHttpObservable(url: string) {
+
+  const controller = new AbortController();
+  const abortSignal = controller.signal;
+
   return Observable.create(observer => {
 
-    fetch(url)
+    fetch(url, {signal: abortSignal})
       .then(response => {
         return response.json();
       })
@@ -54,6 +58,9 @@ export function createHttpObservable(url: string) {
       .catch(error => {
         observer.error(error); // we are respecting the observable contract: either we are completing or catching an error
       });
+
+    // controller.abort();
+    return () => controller.abort();
   });
 }
 
