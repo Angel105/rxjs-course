@@ -40,11 +40,11 @@ import {Observable} from 'rxjs';
 export function createHttpObservable(url: string) {
 
   const controller = new AbortController();
-  const abortSignal = controller.signal;
+  const signal = controller.signal;
 
   return Observable.create(observer => {
 
-    fetch(url, {signal: abortSignal})
+    fetch(url, {signal})
       .then(response => {
         return response.json();
       })
