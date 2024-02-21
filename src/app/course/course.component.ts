@@ -46,6 +46,8 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
         this.course$ = this.store.selectCourseById(this.courseId);
 
+        this.lessons$ = this.loadLessons();
+
     }
 
     ngAfterViewInit() {
@@ -54,7 +56,8 @@ export class CourseComponent implements OnInit, AfterViewInit {
         .pipe(
           map(event => event.target.value),
           debounceTime(400),
-          distinctUntilChanged()
+          distinctUntilChanged(),
+          concatMap( search => this.loadLessons(search))
         ).subscribe(console.log);
 
     }
