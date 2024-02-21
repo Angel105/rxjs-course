@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {createHttpObservable} from "../common/util";
 import {catchError, map, shareReplay, tap} from "rxjs/operators";
-import {noop, Observable, of} from "rxjs";
+import {noop, Observable, of, throwError} from "rxjs";
 import {Course} from "../model/course";
 
 
@@ -28,17 +28,11 @@ export class HomeComponent implements OnInit {
         tap(() => console.log("HTTP request has been executed")),
         map(httpResponse => Object.values(httpResponse["payload"])),
         shareReplay(),
-        catchError(err => of([
-          {
-            id: 0,
-            description: "RxJs In Practice Course",
-            iconUrl: 'https://s3-us-west-1.amazonaws.com/angular-university/course-images/rxjs-in-practice-course.png',
-            courseListIcon: 'https://angular-academy.s3.amazonaws.com/main-logo/main-page-logo-small-hat.png',
-            longDescription: "Understand the RxJs Observable pattern, learn the RxJs Operators via practical examples",
-            category: 'BEGINNER',
-            lessonsCount: 10
-          }
-        ]))
+        catchError(err => {
+          console.log("Error occurred ", err); // could be a call to an error message service
+
+          return throwError(err);
+        })
       );
 
     courses$.subscribe();
