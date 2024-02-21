@@ -30,12 +30,12 @@ export class HomeComponent implements OnInit {
 
           return throwError(err);
         }),
-        tap(() => console.log("HTTP request has been executed")),
-        map(httpResponse => Object.values(httpResponse["payload"])),
-        shareReplay(),
         finalize(()=> {
           console.log('Finalize executed...');
-        })
+        }),
+        tap(() => console.log("HTTP request has been executed")),
+        map(httpResponse => Object.values(httpResponse["payload"])),
+        shareReplay()
       );
 
     courses$.subscribe();
