@@ -57,7 +57,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
           map(event => event.target.value),
           debounceTime(400),
           distinctUntilChanged(),
-          concatMap( search => this.loadLessons(search))
+          switchMap( search => this.loadLessons(search))
         ).subscribe(console.log);
 
     }
